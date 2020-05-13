@@ -3,11 +3,23 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+const option = {
+  socketTimeoutMS: 30000,
+  keepAlive: true,
+  reconnectTries: 30000,
+  useNewUrlParser: true 
+};
+const mongoUrl='mongodb://mongo:27017/mongo-pagination';
+mongoose
+  .connect(mongoUrl,option)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log("Error in DB connection",err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
