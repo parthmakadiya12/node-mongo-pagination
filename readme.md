@@ -8,9 +8,9 @@
     - `cd node-mongo-pagination`
     - run `docker-compose up`
     - You will get mongodb databse and running application.
-    - Port 8181 on local machine GET -> `http://localhost:8181/users/?page=1&limit=2`
+    - Port 8181 on local machine GET -> `http://localhost:8181/news/?page=1&limit=2`
     - Port 27017 is also exposed.(for mongo) make sure these both port are free.
-    - There is also Post request to create user in db POST -> `http://localhost:8181/users/` with body `{"name":"Parth","number":"20"}`
+    - There is also Post request to create news in db POST -> `http://localhost:8181/news/` with body `{"name":"Parth","number":"20"}`
     - Our Databse schema name is `mongo-pagination`
 
 - Manually setup:
@@ -51,12 +51,12 @@ mongoose
   .catch(err => console.log("Error in DB connection",err));
 
 ```
-- For example we will have users `Table`(collection).
-  create a file in `schemas > UserSchema.js` and add this code inside that file.
+- For example we will have news `Table`(collection).
+  create a file in `schemas > NewsSchema.js` and add this code inside that file.
 ```
 const mongoose = require('mongoose');
 
-const UserSchema = mongoose.Schema({
+const NewsSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -67,18 +67,18 @@ const UserSchema = mongoose.Schema({
       }
     });
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("news", NewsSchema);
 
 ```
-- Now create `users.js` file and create `/users` routing
-- In mongo (mongoose) we can use pagination like this (check github `user.js` file)
-- we need to import our `UserSchema` in `user.js` like this `const UserSchema = require("path_to_UserSchema");`
+- Now create `news.js` file and create `/news` routing
+- In mongo (mongoose) we can use pagination like this (check github `news.js` file)
+- we need to import our `NewsSchema` in `news.js` like this `const NewsSchema = require("path_to_NewsSchema");`
 ```
 DBModel.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ... });
 ```
 - So our code for get will look like this:
 ```
-  UserSchema.find({}, {}, query, function (err, data) {
+  NewsSchema.find({}, {}, query, function (err, data) {
     response = err ?
       { "message": "Error occured while fetching data" } :
       { "message": data };

@@ -1,14 +1,14 @@
 var express = require('express');
-const UserSchema = require("../schemas/UserSchema");
+const NewsSchema = require("../schemas/NewsSchema");
 var router = express.Router();
 
 router.post('/', (req, res) => {
-  const newUser = new UserSchema({
-    name: req.body.name,
-    number: req.body.number
+  const newsObj = new NewsSchema({
+    title: req.body.name,
+    description: req.body.number
   });
-  newUser.save().then(item => {
-    res.status(200).send('User Created'); Î
+  newsObj.save().then(item => {
+    res.status(200).send('News Created'); Î
   }).catch(e => {
     res.status(500).send("Internal error", e)
   })
@@ -26,7 +26,7 @@ router.get("/", function (req, res) {
   query.limit = size;
 
   //Model.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ... });
-  UserSchema.find({}, {}, query, function (err, data) {
+  NewsSchema.find({}, {}, query, function (err, data) {
     response = err ?
       { "message": "Error occured while fetching data" } :
       { "message": data };
