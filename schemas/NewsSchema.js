@@ -10,4 +10,4 @@ const NewsSchema = mongoose.Schema({
       }
     });
 
-module.exports = mongoose.model("user", NewsSchema);
+module.exports = mongoose.model("news", NewsSchema);

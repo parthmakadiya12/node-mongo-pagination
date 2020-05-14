@@ -17,8 +17,11 @@
     - Install Mongo on local machine.
     - create a schema in database `mongo-pagination`. Use Robo3T for that for ease of use.
     - I assume you already have `node`,`npm`, `yarn`(optional), `postman`(to make api calls)
+    - For Locally running if you have different mongo url then change it at package.json line `7`. (It should be `mongodb://127.0.0.1:27017/mongo-pagination` here our schema name is `mongo-pagination`)
+    - You can also change port as well from line no 7 package.json 
     - Run `npm install` or `yarn` to install dependencies.
     - Run `npm start-dev` (we already defined in `package.json` check `start-dev`)
+    - For Manual setup the Port is `8484`
 
 ### How to create ? Step by Step.
 
@@ -92,7 +95,13 @@ DBModel.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ...
 ```
 - After that we can finally run the application.
 
+### Unit Test :
 
+- We wrote some test cases.(more of an integration tests with real database)
+- If you wish to run the test then make sure you have mongo connection at `mongodb://127.0.0.1/test` 
+- You can run `npm run test` and it will run all the tests.
+- We haven't use seperate file to configure all this but you can do it. There are still a lot of things pending in terms of best practices.
+- Feel free to raise a PR if you find something better.
 
 ### Docker and Docker-compose setup. (optional):
 - This section is not part of the documentation but if you want to do it just feel free to copy paste it.If you want to understand more about `docker` and `docker-compose` then feel free to find some articles on internet.
@@ -119,6 +128,9 @@ services:
     build: ./
     ports:
       - "8181:8484"
+    environment: 
+      - PORT=8484
+      - MONGOURL=mongodb://mongo:27017/mongo-pagination
     volumes:
       - .:/app
     links:

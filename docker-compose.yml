@@ -6,6 +6,9 @@ services:
     build: ./
     ports:
       - "8181:8484"
+    environment: 
+      - PORT=8484
+      - MONGOURL=mongodb://mongo:27017/mongo-pagination
     volumes:
       - .:/app
     links:

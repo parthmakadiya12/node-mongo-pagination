@@ -1,25 +1,39 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mongoose = require('mongoose');
 
-var indexRouter = require('./routes/index');
-var newsRoute = require('./routes/news');
+const indexRouter = require('./routes/index');
+const newsRoute = require('./routes/news');
 
-var app = express();
+const app = express();
+const cors = require("cors");
+
+// Db connection
 const option = {
   socketTimeoutMS: 30000,
   keepAlive: true,
   reconnectTries: 30000,
   useNewUrlParser: true 
 };
-const mongoUrl='mongodb://mongo:27017/mongo-pagination';
+const mongoUrl=process.env.MONGOURL || 'mongodb://127.0.0.1:27017/mongo-pagination';
 mongoose
   .connect(mongoUrl,option)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log("Error in DB connection",err));
+
+//Cors allow all
+app.use(
+  cors({
+    allowedHeaders: ["sessionId", "Content-Type"],
+    exposedHeaders: ["sessionId"],
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTION",
+    preflightContinue: false
+  })
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -49,6 +63,6 @@ app.use(function(err, req, res, next) {
   res.status(500).send(err.status);
   res.render('error');
 });
-app.listen(8484);
+app.listen(process.env.PORT ||8484);
 
 module.exports = app;

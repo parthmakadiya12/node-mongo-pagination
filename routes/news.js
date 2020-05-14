@@ -3,12 +3,13 @@ const NewsSchema = require("../schemas/NewsSchema");
 var router = express.Router();
 
 router.post('/', (req, res) => {
+  const { title, description } = req.body;
   const newsObj = new NewsSchema({
-    title: req.body.title,
-    description: req.body.description
+    title: title,
+    description: description
   });
   newsObj.save().then(item => {
-    res.status(200).send('News Created'); Î
+    res.status(200).send('News Created');
   }).catch(e => {
     res.status(500).send("Internal error", e)
   })
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
   let query = {}
   if (pageNo < 0 || pageNo === 0) {
     response = { "message": "Page Should be a number and should start with 1" };
-    return res.json(response)
+    return res.status(400).send(response)
   }
   query.skip = size * (pageNo - 1);
   query.limit = size;
@@ -38,6 +39,6 @@ router.get("/", async (req, res) => {
       currentPage: pageNo || 1
     });
   });
-})
+});
 
 module.exports = router;
