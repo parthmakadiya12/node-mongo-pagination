@@ -4,8 +4,8 @@ var router = express.Router();
 
 router.post('/', (req, res) => {
   const newsObj = new NewsSchema({
-    title: req.body.name,
-    description: req.body.number
+    title: req.body.title,
+    description: req.body.description
   });
   newsObj.save().then(item => {
     res.status(200).send('News Created'); Î
@@ -14,23 +14,29 @@ router.post('/', (req, res) => {
   })
 });
 
-router.get("/", function (req, res) {
-  var pageNo = parseInt(req.query.page)
-  var size = parseInt(req.query.limit)
-  var query = {}
+router.get("/", async (req, res) => {
+  let pageNo = parseInt(req.query.page)
+  let size = parseInt(req.query.limit)
+  let query = {}
   if (pageNo < 0 || pageNo === 0) {
-    response = {"message": "Page Should be a number and should start with 1" };
+    response = { "message": "Page Should be a number and should start with 1" };
     return res.json(response)
   }
   query.skip = size * (pageNo - 1);
   query.limit = size;
+
+  const count = await NewsSchema.countDocuments();
 
   //Model.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ... });
   NewsSchema.find({}, {}, query, function (err, data) {
     response = err ?
       { "message": "Error occured while fetching data" } :
       { "message": data };
-    res.json(response);
+    res.json({
+      response,
+      totalPages: Math.ceil(count / size) || 0,
+      currentPage: pageNo || 1
+    });
   });
 })
 
